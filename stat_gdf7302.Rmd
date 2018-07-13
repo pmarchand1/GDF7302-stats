@@ -1,0 +1,683 @@
+---
+title: "GDF7302 - Statistiques"
+author: "Philippe Marchand"
+date: "12 juillet 2018"
+output: slidy_presentation
+---
+<style> p.caption { font-size: 0.6em; } </style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Objectifs
+
+* Connaître les différents rôles des méthodes statistiques.
+
+* Comprendre des concepts de base liés aux statistiques descriptives et 
+aux problèmes d'estimation, de prédiction et de test d'hypothèse.
+
+* Pouvoir interpréter les résultats d'analyses statistiques courantes dans
+la littérature scientifique.
+
+
+# Différents rôles des statistiques
+
+* *Décrire* les caractéristiques sommaires d'un ensemble de données.
+
+* À partir de mesures prises sur un échantillon d'individus, *estimer* les 
+caractéristiques d'une variable, ou d'une relation entre variables,
+au niveau de la population. 
+
+* *Tester* une hypothèse portant sur ces variables ou relations entre variables.
+
+* *Prédire* la valeur d'une variable pour un nouvel individu hors de l'échantillon.
+
+---
+# - Expliquer échantillon, individu, population et variable au point 2.
+# - Sauf description, autres tentent de généraliser à partir d'un échantillon. 
+---
+
+ 
+# Exemples de questions
+
+* Quel est le diamètre moyen des arbres mesurés dans une parcelle?
+
+* Quel est le taux de chômage à Rouyn-Noranda? Combien d'emplois seront créés l'an prochain?
+
+* Combien y a-t-il d'orginaux dans le Parc de la Vérendrye? La population est-elle en croissance 
+par rapport à l'année précédente?
+
+
+
+# Statistiques descriptives
+
+Prenons une série de données $x_1$, $x_2$, ..., $x_n$ provenant d'une variable $x$ 
+mesurée sur $n$ individus. 
+
+## Moyenne
+
+<center>
+$E[x] = \frac{x_1 + x_2 + ... + x_n}{n} = \frac{\sum_{i = 1}^{n} x_i}{n}$
+</center>
+
+# Statistiques descriptives
+
+Prenons une série de données $x_1$, $x_2$, ..., $x_n$ provenant d'une variable $x$ 
+mesurée sur $n$ individus. 
+
+## Moyenne
+
+<center> 
+$E[x] = \frac{x_1 + x_2 + ... + x_n}{n} = \frac{\sum_{i = 1}^{n} x_i}{n}$
+
+
+![](moyenne.PNG)
+</center>
+
+
+
+# Statistiques descriptives
+
+## Écart à la moyenne
+
+<center>![](moyenne_ecart.PNG)</center>
+
+# Statistiques descriptives
+
+## Écart à la moyenne
+
+<center>![](moyenne_ecart.PNG)</center>
+
+## Variance
+<center>
+$\sigma_x^2 = \frac{\sum_{i = 1}^{n} (x_i - E[x])^2}{n}$
+</center>
+
+
+
+# Statistiques descriptives
+
+## Écart-type
+<center>
+$\sigma_x = \sqrt{\frac{\sum_{i = 1}^{n} (x_i - E[x])^2}{n}}$
+</center>
+
+# Statistiques descriptives
+
+## Écart-type
+<center>
+$\sigma_x = \sqrt{\frac{\sum_{i = 1}^{n} (x_i - E[x])^2}{n}}$
+</center>
+
+
+**Note**: Lorsqu'on veut estimer la variance ou l'écart-type d'une population
+à partir d'un échantillon, on divise par $n-1$ plutôt que $n$.
+
+
+
+# Statistiques descriptives
+
+Statistiques basées sur le rang des données (en ordre croissant)
+
+* Minimum et maximum
+
+* Médiane
+
+* Quantiles: divisent les données en $m$ groupes de la même taille
+
+    * Exemples: quartile ($m$ = 4), quintiles ($m$ = 5), centiles ($m$ = 100).
+   
+    
+    
+# Boîte à moustache (*boxplot*)
+
+Représentation graphique basée sur les quartiles
+
+<center>![](boxplot.PNG)</center>
+
+# Boîte à moustache (*boxplot*)
+
+Représentation graphique basée sur les quartiles
+
+<center>![](boxplot.PNG)</center>
+    
+Parfois, les valeurs extrêmes situées au-delà d'une certaine distance des quartiles 
+sont représentées par des points séparés de la moustache.
+
+<center>![](boxplot2.PNG)</center>
+
+---
+# - Avantage des quantiles: moins sensibles aux valeurs extrêmes.
+---
+
+
+
+
+# Histogramme
+
+Divise l'axe des données en intervalles de même largeur et compte le nombre
+d'observations dans chaque intervalle.
+
+<center>![](histogramme.PNG)</center>
+
+# Histogramme
+
+Divise l'axe des données en intervalles de même largeur et compte le nombre
+d'observations dans chaque intervalle.
+
+<center>![](hist2.PNG)</center>
+
+---
+# - Expliquer concept de densité de probabilité. 
+---
+
+
+
+# Exemple
+
+* Jeu de données `CO2` inclus avec le logiciel R.
+
+* Mesure du taux d'assimilation du CO$_2$ (*uptake*) en fonction de la concentration
+de CO$_2$ dans l'air (*conc*), pour des plants d'*Echinochloa crus-galli*
+provenant de deux populations différentes (Québec ou Mississippi) et soumis à 
+deux traitements (refroidi ou non).
+
+
+```{r}
+library(dplyr)
+data(CO2)
+CO2 <- as.data.frame(CO2)
+sample_n(CO2, 10)
+```
+
+Source: Potvin, C. *et al.* 1990. The Statistical Analysis of Ecophysiological 
+Response Curves Obtained from Experiments Involving Repeated Measures. 
+*Ecology* 71, pp.1389-1400.
+
+---
+# - Illustrer types de données (catégorique, numérique discrète, continue) 
+---
+
+# Exemple
+
+```{r}
+group_by(CO2, Type, Treatment) %>%
+    summarize(median(uptake), mean(uptake), sd(uptake))
+boxplot(uptake ~ Type + Treatment, CO2, cex.axis = 0.8)
+
+```
+
+
+# Corrélation
+
+Prenons deux variables $x$ et $y$ observées sur les mêmes individus.
+
+* La corrélation (généralement notée $r$ ou $\rho$) mesure l'association entre 
+les valeurs de $x$ et $y$ par rapport à leur moyenne respective.
+
+* Si les valeurs élevées de $x$ sont plus souvent associées aux valeurs élevées de $y$, la 
+corrélation est positive. Dans le cas contraire ($x$ est moindre quand $y$ est élevée et vice versa),
+la corrélation est négative.
+
+* La corrélation est définie de manière à être toujours comprise entre -1 et 1.
+
+* Pour deux variables indépendantes (sans relation entre elles), la corrélation
+est zéro, mais l'inverse n'est pas nécessairement le cas.
+
+
+
+# Corrélation
+
+<center>![Image: Wikipédia](Correlation_examples.png)</center>
+
+---
+# - Spécifier qu'on parle de corrélation linéaire. 
+# - Donner un exemple périodique pour dernier point. 
+# - Transition avant la prochaine diapo (fin des stats descriptives)
+---
+
+
+
+# Modèles statistiques
+
+* Afin de généraliser les observations prises sur un échantillon à une population,
+on a besoin d'un *modèle*; une représentation abstraite et simplifiée du 
+système que l'on étudie.
+
+* En statistique, la modélisation requiert d'assigner une *distribution* à 
+chaque variable mesurée.
+
+* Exemple: distribution normale pour une variable continue.
+
+---
+# - Définir distribution (formule définit une forme générale de la densité de prob., paramètres à estimer)
+---
+
+
+
+# Distribution normale 
+
+* Deux paramètres ajustables: moyenne $\mu$ et écart-type $\sigma$.
+
+* Probabilité que $x$ soit compris dans l'intervalle $(\mu - \sigma, \mu + \sigma)$: $\approx$ 68%;
+  dans l'intervalle $(\mu - 2 \sigma, \mu + 2 \sigma)$: $\approx$ 95%.
+
+<center>![Image: Wikipédia](normale.png)</center>
+
+---
+# - Exemple: https://fr.wikipedia.org/wiki/Planche_de_Galton
+---
+
+
+
+# Distributions pour des variables discrètes
+
+* Distribution binomiale: donne la probabilité d'obtenir $x$ "succès" sur $N$ 
+observations, si chaque observation a indépendamment une probabilité de succès $p$.
+
+    * Exemple: Si on plante 50 semis et que 34 survivent l'année suivante, quelle
+      est notre estimé du taux de survie?
+      
+* Distribution de Poisson: reliée à la distribution binomiale, mais plus pratique
+lorsque $N$ est très grand et $p$ très petite. Elle n'a qu'un seul paramètre, soit
+le nombre moyen d'événements observés.
+
+    * Exemple: Le nombre de cas d'une maladie rare découverts au Canada chaque année.
+
+
+
+# Estimation de paramètres
+
+Supposons qu'une variable $x$ suit une distribution normale (moyenne $\mu$,
+écart-type $\sigma$). Avec quelle précision peut-on estimer $\mu$ à partir des 
+mesures de $x$ sur un échantillon aléatoires de $n$ individus?
+
+* La moyenne de $x$ calculée sur l'échantillon suit elle-même une distribution 
+normale, avec une moyenne égale à $\mu$ et un écart-type égal à:
+
+<center><big>$\frac{\sigma}{\sqrt{n}}$ </big></center>
+
+* Puisque cet écart-type représente la variation aléatoire de l'estimé d'un
+paramètre autour de sa "vraie" valeur, on l'appelle erreur-type (*standard error*).
+
+* Cette formule est une bonne approximation de l'erreur-type de la moyenne
+de plusieurs distributions autres que la normale.
+
+
+---
+# - Définir échantillon aléatoire.
+# - Noter comment l'erreur-type varie avec n.
+---
+
+
+# Intervalle de confiance
+
+* Connaissant l'erreur-type, on peut évaluer la probabilité que l'estimé de la
+moyenne (notons le $\bar{x}$) soit à une certaine distance de la moyenne de la
+population $\mu$. 
+
+* Par exemple, il y a une probabilité d'environ 95% que $\bar{x}$ se trouve à $\pm$ 1,96 erreurs-type de $\mu$.
+
+<center>
+$\left( \mu - 1,96 \frac{\sigma}{\sqrt{n}}, \mu + 1,96 \frac{\sigma}{\sqrt{n}}\right)$
+</center>
+
+# Intervalle de confiance
+
+* Connaissant l'erreur-type, on peut évaluer la probabilité que l'estimé de la
+moyenne (notons le $\bar{x}$) soit à une certaine distance de la moyenne de la
+population $\mu$. 
+
+* Par exemple, il y a une probabilité d'environ 95% que $\bar{x}$ se trouve à $\pm$ 1,96 erreurs-type de $\mu$.
+
+<center>
+$\left( \mu - 1,96 \frac{\sigma}{\sqrt{n}}, \mu + 1,96 \frac{\sigma}{\sqrt{n}}\right)$
+</center>
+
+* On peut définir un *intervalle de confiance* à 95% pour $\bar{x}$:
+
+<center>
+$\left( \bar{x} - 1,96 \frac{\sigma}{\sqrt{n}}, \bar{x} + 1,96 \frac{\sigma}{\sqrt{n}}\right)$. 
+</center> 
+
+Pour 95% des échantillons possibles, $\mu$ sera compris à l'intérieur de l'intervalle
+défini ainsi.
+
+* Toutefois, après avoir obtenu un intervalle de confiance pour un échantillon donné,
+il est inexact d'affirmer que "la probabilité que $\mu$ soit contenue dans l'intervalle est de 95%".
+
+
+
+# Question
+
+D'après ce que nous avons vu, comment interprétez-vous cette phrase accompagnant
+les résultats d'un sondage d'opinion publique?
+
+*"48% des électeurs sont satisfaits du gouvernement. La marge d'erreur de ce sondage
+est de plus ou moins 4%, 19 fois sur 20."*
+
+---
+# - Biais vs. variance
+# - Revoir ce qu'on a vu à date et passer aux tests
+---
+
+
+# Tests d'hypothèse
+
+Dans le jeu de données vu plus tôt, quel est l'effet du traitement de
+refroidissement sur l'assimilation de CO$_2$?
+
+En moyenne, les 42 plants traités ont un taux d'assimilation plus faible que les 42
+non-traités (23.8 vs. 30.6 $\frac{\mu mol}{m^2 s}$). Toutefois, on observe
+une grande variation entre les plants de chaque groupe. Comment vérifier si la 
+différence observée est bien le résultat du traitement?
+
+```{r}
+boxplot(uptake ~ Treatment, data = CO2)
+```
+
+
+
+# Tests d'hypothèse
+
+*Hypothèse nulle*: Le traitement n'a pas d'effet sur le taux d'assimilation.
+Selon cette hypothèse, la différence entre les deux groupes est le fruit du
+hasard.
+
+Si l'hypothèse nulle était valide, quelle serait la distribution de la différence
+entre la moyenne du taux des deux groupes ?
+
+On peut *simuler* l'hypothèse nulle en divisant les 84 plants en 2 groupes au hasard et
+en calculant la différence entre leurs moyennes. Il faut répéter ce processus
+de nombreuses fois afin d'obtenir une distribution.
+
+
+
+# Tests d'hypothèse
+
+*Hypothèse nulle*: Le traitement n'a pas d'effet sur le taux d'assimilation.
+Selon cette hypothèse, la différence entre les deux groupes est le fruit du
+hasard.
+
+À partir de 10 000 simulations de l'hypothèse nulle, on constate que 95% résultent
+en une différence comprise entre -4.6 et 4.6, et seulement 18 (0.18%) résultent 
+en une différence plus petite (donc une différence négative plus importante) 
+que celle observée dans nos données (-6.9).
+
+```{r}
+sim_diff <- function() {
+    trait <- sample(1:84, 42, replace = FALSE)
+    mean(CO2$uptake[trait]) - mean(CO2$uptake[-trait])
+}
+diff_nulle <- replicate(10000, sim_diff())
+diff_obs <- mean(CO2$uptake[CO2$Treatment == "chilled"]) -
+            mean(CO2$uptake[CO2$Treatment == "nonchilled"])
+
+library(ggplot)
+ggplot(data = NULL, aes(x = diff_nulle)) +
+    labs(x = expression("Différence de taux d'assimilation pour les plants traités (" * mu*mol/(m^2 * s) * ")"),
+         y = "Nombre de simulations (sur 10 000)") +
+    geom_histogram(color = "white", fill = "orange", bins = 50) +
+    geom_vline(xintercept = diff_obs, color = "darkblue") +
+    scale_y_continuous(expand = c(0, 0))
+
+```
+
+
+
+# Tests d'hypothèse
+
+Pour cet exemple (différence entre deux moyennes), on connaît une distribution
+théorique correspondant à l'hypothèse nulle: la distribution *t* de Student.
+
+Le test *t* donne un intervalle de confiance pour l'effet du traitement et 
+la probabilité (*p-value*) qu'une différence plus importante que celle observée
+puisse être obtenue d'après l'hypothèse nulle.
+
+```{r}
+t.test(uptake ~ Treatment, data = CO2)
+```
+
+**Question**: Pourquoi est-il important que les plants traités aient été 
+choisis de façon aléatoire lors de la réalisation de l'expérience?
+
+---
+# - comparer l'intervalle et la p-value avec les simulations
+---
+
+
+
+# Régression
+
+Si une variable a une distribution normale dans la population, et qu'on choisit
+un individu $i$ au hasard sur lequel on ne connaît rien, quelle est la meilleure
+prédiction qu'on puisse faire sur la valeur de $y_i$?
+
+<center><big>$y_i \sim N(\mu, \sigma)$</big></center>
+
+
+
+# Régression
+
+Si par contre on peut mesurer une autre variable $x$, qui est reliée à $y$, il 
+est possible de prédire $y$ avec plus de précision, en estimant au préalable 
+comment $x$ (le *prédicteur*) affecte le niveau moyen de $y$ (la *réponse*). 
+
+Dans le cas le plus simple où la relation entre les deux variables est linéaire,
+on obtient le modèle de régression linéaire.
+
+<center><big>
+$y_i \sim N(\mu_i, \sigma)$
+
+$\mu_i = a + b x_i$
+</big></center>
+
+Ici, $\sigma$ représente l'écart-type de la différence entre la valeur observée
+de $y$ et celle prédite en fonction de $x$. Cette différence se nomme aussi 
+*résidu*.
+
+
+
+# Régression
+
+## Questions
+
+Dans le modèle de régression linéaire: 
+
+<center><big>
+$y_i \sim N(\mu_i, \sigma)$
+
+$\mu_i = a + b x_i$
+</big></center>
+
+* Comment interprète-t-on les coefficients $a$ et $b$?
+
+* Que peut-on dire sur la valeur de $\sigma$ dans ce modèle par rapport
+  à l'écart-type de la distribution $y$, indépendamment de $x$?
+
+
+
+# Régression
+
+Pour estimer les coefficients (ou paramètres) d'un modèle de régression linéaire,
+il faut déterminer quelles valeurs de $a$ et $b$ minimisent l'erreur résiduelle
+(donc $\sigma$). 
+
+*Exemple*: Régression du taux d'assimilation du CO$_2$ en fonction de la
+concentration de CO$_2$ ambiante, pour les données de Potvin *et al.*.
+
+```{r}
+mod_co2 <- lm(uptake ~ conc, data = CO2)
+summary(mod_co2)
+```
+
+---
+# - Expliquer estimés, tests t, R^2
+# - Mentionner que l'intercept n'a peut-être pas de signification réaliste
+---
+
+
+# Régression - Valider le modèle
+
+Est-ce que le modèle linéaire est réaliste pour ces données?
+
+```{r}
+ggplot(CO2, aes(x = conc, y = uptake)) +
+    labs(x = expression("Concentration de " * CO_2 * " (mL/L)"), 
+         y = expression("Taux d'assimilation du " * CO_2 * " (" * mu*mol/(m^2 * s) * ")")) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE)
+```
+
+---
+# - concept de biais vs. variance
+---
+
+# Régression - Valider le modèle
+
+Vérifier l'absence de patron dans les résidus.
+
+```{r}
+plot(mod_co2, which = 1)
+```
+
+---
+# - ultimement: valider avec de nouvelles données
+---
+
+
+
+# Régression et différence entre groupes
+
+En plus de variables numériques, on peut utiliser des prédicteurs binaires ou
+catégoriques. Ainsi, la question de l'effet du traitement sur le taux
+d'assimilation peut être présentée sous forme de régression.
+
+```{r}
+mod_co2 <- lm(uptake ~ Treatment, CO2)
+summary(mod_co2)
+```
+
+# Régression et différence entre groupes
+
+En plus de variables numériques, on peut utiliser des prédicteurs binaires ou
+catégoriques. Ainsi, la question de l'effet du traitement sur le taux
+d'assimilation peut être présentée sous forme de régression.
+
+```{r}
+mod_co2 <- lm(uptake ~ Treatment, CO2)
+summary(mod_co2)
+```
+
+Le résultat est identique à celui du test *t* précédent:
+
+```{r}
+t.test(uptake ~ Treatment, data = CO2)
+```
+
+---
+# - signification de l'intercept (niveau de référence)
+# - montrer que la régression donne plus d'informations
+# - mentionner régression linéaire multiple
+---
+
+
+
+# Régression
+
+Différence entre intervalle de confiance (pour un paramètre de la population) 
+et intervalle de prédiction (pour des observations individuelles).
+
+```{r}
+mod_co2 <- lm(uptake ~ conc, CO2)
+ggplot(CO2, aes(x = conc, y = uptake)) +
+    labs(x = expression("Concentration de " * CO_2 * " (mL/L)"), 
+         y = expression("Taux d'assimilation du " * CO_2 * " (" * mu*mol/(m^2 * s) * ")")) +
+    geom_point() +
+    geom_smooth(method = "lm") +
+    coord_cartesian(ylim = c(0, 50))
+```
+
+# Régression
+
+Différence entre intervalle de confiance (pour un paramètre de la population) 
+et intervalle de prédiction (pour des observations individuelles).
+
+```{r}
+CO2_pred <- data.frame(conc = seq(min(CO2$conc), max(CO2$conc), length = 100))
+CO2_pred <- cbind(CO2_pred, predict(mod_co2, CO2_pred, interval = "prediction"))
+ggplot(CO2, aes(x = conc)) +
+    labs(x = expression("Concentration de " * CO_2 * " (mL/L)"), 
+         y = expression("Taux d'assimilation du " * CO_2 * " (" * mu*mol/(m^2 * s) * ")")) +
+    geom_ribbon(data = CO2_pred, aes(ymin = lwr, ymax = upr), alpha = 0.2) +
+    geom_point(aes(y = uptake)) +
+    geom_line(data = CO2_pred, aes(y = fit), color = "blue") +
+    coord_cartesian(ylim = c(0, 50))
+```
+
+# Régression
+
+<center>
+![](vitd1.PNG)
+
+![](vitd2.jpg)
+</center>
+
+
+
+# Résumé
+
+* Décrire la distribution d'une variable
+    * Statistiques descriptives et représentations graphiques
+* Estimer les paramètres d'un modèle statistique
+    * Moyenne d'un échantillon, différence entre moyennes, 
+      paramètres de régression
+    * Erreur-type et intervalle de confiance
+* Tester une hypothèse à partir de données expérimentales
+    * Hypothèse nulle
+    * *p-value*
+* Prédire la valeur d'une variable pour une nouvelle observation
+    * Intervalle de prédiction
+    * Biais vs. variance
+ 
+
+
+# Points à surveiller
+
+* Influence des valeurs extrêmes
+
+* Significativité vs. importance
+
+ 
+# 
+
+<center>
+![](fb1.PNG)
+
+![](fb2.PNG)
+</center>
+
+
+# Importance relative ou absolue
+
+Exemple: Lequel des scénarios a le plus grand impact?
+
+* Augmentation de 10% du risque d'une maladie touchant 20% de la population.
+
+* Multiplication par 2 du risque d'une maladie affectant 1% de la population.
+
+
+
+# Points à surveiller
+
+* Influence des valeurs extrêmes
+
+* Significativité vs. importance
+
+* Attention aux comparaisons multiples
+
+* Le meilleur modèle n'est peut-être pas assez bon (valider, pas juste comparer)
+
+* Corrélation entre deux variables dépend de la population
+
