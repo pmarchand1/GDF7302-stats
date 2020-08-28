@@ -95,7 +95,7 @@ au niveau de la population.
 
 --
 
-- Combien y a-t-il d'orginaux dans le Parc de la Vérendrye? La population est-elle en croissance 
+- Combien y a-t-il d'orignaux dans le Parc de la Vérendrye? La population est-elle en croissance 
 par rapport à l'année précédente?
 
 ---
@@ -126,7 +126,7 @@ class: inverse, center, middle
 
 # Exemple
 
-- 1163 thyuas occidentaux dans une parcelle d'un hectare à la FERLD.
+- 1163 thuyas occidentaux dans une parcelle d'un hectare à la FERLD.
 
 ```{r, warning = FALSE}
 toc <- read.csv("ferld_toc1823.csv")
